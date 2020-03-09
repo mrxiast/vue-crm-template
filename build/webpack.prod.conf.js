@@ -38,23 +38,32 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new UglifyJsPlugin({
       uglifyOptions: {
-        compress: {
-          warnings: false
+        compress: {//压缩
+          warnings: false//警告：true保留警告，false不保留
         }
       },
       sourceMap: config.build.productionSourceMap,
       parallel: true
     }),
     // extract css into its own file
+    //抽取文本。比如打包之后的index页面有style插入，就是这个插件抽取出来的，减少请求
     new ExtractTextPlugin({
       filename: utils.assetsPath('css/[name].[contenthash].css'),
       // Setting the following option to `false` will not extract CSS from codesplit chunks.
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
       // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
+      //将以下选项设置为“false”不会从代码分割块中提取CSS。
+      //当webpack加载codesplit块时，它们的CSS将被动态地插入样式加载程序。
+      //增大文件大小：https://github.com/vuejs-templates/webpack/issues/1110
       allChunks: false,
     }),
+
+
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
+    //压缩提取的CSS。我们使用这个插件是为了
+    //来自不同组件的重复CSS可以被删除。
+    //优化css的插件
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
         ? { safe: true, map: { inline: false } }
@@ -63,19 +72,23 @@ const webpackConfig = merge(baseWebpackConfig, {
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
+    //使用正确的资产哈希生成dist index.html进行缓存。
+    //您可以通过编辑/index.html自定义输出
+    //请参阅https://github.com/ampedandwired/html-webpack-plugin
+
+    new HtmlWebpackPlugin({//html打包
       filename: config.build.index,
       template: 'index.html',
       inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
+      minify: {//压缩
+        removeComments: true,//删除注释
+        collapseWhitespace: true,//删除空格
+        removeAttributeQuotes: true//删除属性的引号
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
+      chunksSortMode: 'dependency'//模块排序，按照我们需要的顺序排序
     }),
     // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),
@@ -97,6 +110,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
+    //将webpack运行时和模块清单提取到其自己的文件中，以便
+    //防止在更新应用程序包时更新供应商哈希
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       minChunks: Infinity
@@ -112,7 +127,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
 
     // copy custom static assets
-    new CopyWebpackPlugin([
+    new CopyWebpackPlugin([//复制，比如打包完之后需要把打包的文件复制到dist里面
       {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,

@@ -1,9 +1,10 @@
 'use strict'
+//css转化
 const path = require('path')
 const config = require('../config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const packageConfig = require('../package.json')
-
+//导出文件的位置，根据环境判断开发环境和生产环境，为config文件中index.js文件中定义的build.assetsSubDirectory或dev.assetsSubDirectory
 exports.assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === 'production'
     ? config.build.assetsSubDirectory
