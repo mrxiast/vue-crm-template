@@ -9,65 +9,7 @@ export const service = axios.create({
     "timeout": 60000
 });
 
-
-// 添加请求拦截器
-// service.interceptors.request.use(
-//     function (config) {
-//         // 请求头添加token
-//         if (store.state.UserToken) {
-//             config.headers.Authorization = store.state.UserToken
-//         }
-//         return config
-//     },
-//     function (error) {
-//         return Promise.reject(error)
-//     }
-// )
-
-// 响应拦截器即异常处理
-// service.interceptors.response.use(
-//     response => {
-//         return response.data
-//     },
-//     err => {
-//         if (err && err.response) {
-//             switch (err.response.status) {
-//                 case 400:
-//                     err.message = '请求出错'
-//                     break
-//                 case 401:
-//                     Message.warning({
-//                         message: '授权失败，请重新登录'
-//                     })
-//                     store.commit('LOGIN_OUT')
-//                     setTimeout(() => {
-//                         window.location.reload()
-//                     }, 1000)
-
-//                     return
-//                 case 403:
-//                     err.message = '拒绝访问'
-//                     break
-//                 case 404:
-//                     err.message = '请求错误,未找到该资源'
-//                     break
-//                 case 500:
-//                     err.message = '服务器端出错'
-//                     break
-//             }
-//         } else {
-//             err.message = '连接服务器失败'
-//         }
-//         Message.error({
-//             message: err.message
-//         })
-//         return Promise.reject(err.response)
-//     }
-// )
-
-
 service.interceptors.request.use(config => {
-    // console.log(config)
     return config;
 }, err => {
     Message.error('请求超时');
@@ -76,11 +18,12 @@ service.interceptors.request.use(config => {
 
 // http response 拦截器
 service.interceptors.response.use(response => {
+    console.log(response.data, 'response')
     const data = response.data;
     if (response.headers.token && response.headers.token != '' && response.headers.token != null) {
         setStore('Authorization', response.headers.token)
     }
-    console.log(data, 'datadata')
+
     // 根据返回的code值来做不同的处理(和后端约定)
     switch (data.code) {
         case 401:
@@ -115,10 +58,10 @@ service.interceptors.response.use(response => {
             }
             break;
         default:
-            return data.data;
+            return data;
     }
 
-    return data.data;
+    return data;
 }, (err) => {
     return Promise.reject(err);
 });

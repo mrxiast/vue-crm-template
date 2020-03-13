@@ -6,9 +6,9 @@
 
 ## npm i安装之后，npm run dev 即可开始运行
 
-## service 内为简单的node 也是 npm i之后 ，nodemon index运行，已做好跨域处理
+## 数据库运行 先npm i 本地安装mongodb 配置net start mongodb 开启数据库
 
-## 写的不好 勉强运行！！勿喷
+## service 内为简单的node 也是 npm i之后 ，nodemon index运行，已做好跨域处理
 
 ## 仅限自己使用
 

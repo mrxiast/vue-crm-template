@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+
 /* 初始路由 */
 export default new Router({
     routes: [

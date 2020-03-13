@@ -16,7 +16,6 @@ import './styles/index.scss'
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-
 router.beforeEach((to, from, next) => {
 
     if (!store.state.UserToken) {
@@ -27,6 +26,7 @@ router.beforeEach((to, from, next) => {
             next()
         } else {
             next({ path: '/login' })
+
         }
     } else {
         if (!store.state.permissionList) {

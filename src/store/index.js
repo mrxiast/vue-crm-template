@@ -28,7 +28,7 @@ const actions = {
         let permissionList = await fetchPermission()
 
         /*  拿到后台返回的简易数据，与前端本地写好完整，有路径的路由作对比  然后两个数组循环对比拿真实的权限路由*/
-        let routes = recursionRouter(permissionList, adminRoutes)
+        let routes = recursionRouter(permissionList.data, adminRoutes)
 
         //获取的路由的匹配的第一个对象，就是下面这一块
         // {

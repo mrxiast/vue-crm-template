@@ -4,9 +4,7 @@ const app = express()
 // 引入json解析中间件
 const bodyParser = require('body-parser');
 
-const router = express.Router();
-
-
+const mongo = require('./dbase')
 // 允许所有的请求形式 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -17,8 +15,8 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api', require('./routes/get.js'))
-app.use('/api', require('./routes/post.js'))
+app.use('/', require('./routes/get.js'))
+app.use('/', require('./routes/post.js'))
 
 // 利用express.static中间件来托管静态资源。
 app.use(express.static('imgs'));

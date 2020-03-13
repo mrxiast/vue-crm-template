@@ -13,7 +13,12 @@
           <el-input prefix-icon="el-icon-user" v-model="subForm.account" placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password" style="margin-top:30px">
-          <el-input prefix-icon="el-icon-lock" v-model="subForm.password" placeholder="请输入密码"></el-input>
+          <el-input
+            prefix-icon="el-icon-lock"
+            v-model="subForm.password"
+            placeholder="请输入密码"
+            type="password"
+          ></el-input>
         </el-form-item>
         <el-form-item style="margin-top:50px">
           <el-button style="margin-left:50px;width:150px;" type="primary" @click="clickLogin">登录</el-button>
@@ -44,7 +49,7 @@ export default {
       try {
         let params = this.subForm
         let data = await login(params)
-        let token = data.token
+        let token = data.data.token
         this.$store.commit('LOGIN_IN', token)
         this.$router.replace('/')
       } catch (e) {
