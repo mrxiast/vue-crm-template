@@ -9,8 +9,8 @@
         :rules="rules"
         ref="loginForm"
       >
-        <el-form-item label="账号" prop="account">
-          <el-input prefix-icon="el-icon-user" v-model="subForm.account" placeholder="请输入账号"></el-input>
+        <el-form-item label="账号" prop="userName">
+          <el-input prefix-icon="el-icon-user" v-model="subForm.userName" placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password" style="margin-top:30px">
           <el-input
@@ -24,6 +24,7 @@
           <el-button style="margin-left:50px;width:150px;" type="primary" @click="clickLogin">登录</el-button>
         </el-form-item>
       </el-form>
+      <a class="wruser" @click="register">没有账号？点我注册</a>
     </div>
   </div>
 </template>
@@ -34,12 +35,11 @@ export default {
   data() {
     return {
       subForm: {
-        account: '',
+        userName: '',
         password: ''
       },
-
       rules: {
-        account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+        userName: [{ required: true, message: '请输入账号', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       }
     }
@@ -61,10 +61,13 @@ export default {
         if (valid) {
           this.subLogin()
         } else {
-          // this.$message.error('提交出错')
+          this.$message.error('提交出错')
           return false
         }
       })
+    },
+    register() {
+      this.$router.push('/register')
     }
   }
 }

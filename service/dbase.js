@@ -15,24 +15,4 @@ mongoose.connection.on('disconnected', function () {
 
 
 
-const tableItem = mongoose.model('tableitem', {
-    name: {
-        type: String,
-        required: true
-    },
-    age: {
-        type: Number,
-        required: true
-    },
-    sex: {
-        type: String,
-        required: true
-    }
-})
-
-
-
-module.exports = {
-    mongoose,
-    tableItem
-}
+module.exports = mongoose

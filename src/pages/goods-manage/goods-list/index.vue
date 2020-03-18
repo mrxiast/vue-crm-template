@@ -9,41 +9,107 @@
       </el-col>
     </el-row>
 
-    <el-table :data="tableData" border style="width: 100%">
-      <el-table-column prop="name" label="姓名" width="120" align="center"></el-table-column>
-      <el-table-column prop="age" label="年龄" width="120" align="center"></el-table-column>
-      <el-table-column prop="sex" label="性别" width="120" align="center"></el-table-column>
+    <el-table :data="tableData" border style="width: 100%;margin-top:10px;">
+      <el-table-column prop="name" label="商品名称" align="center"></el-table-column>
+      <el-table-column prop="inPice" label="商品进价" align="center"></el-table-column>
+      <el-table-column prop="salePice" label="商品卖价" align="center"></el-table-column>
+      <el-table-column prop="type" label="商品类型" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
+          <el-button @click="deleItem(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-dialog title="添加商品" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <el-input v-model="addForm.name" placeholder="输入姓名"></el-input>
-      <el-input type="number" v-model="addForm.age" placeholder="输入年龄"></el-input>
-      <el-input v-model="addForm.sex" placeholder="输入性别"></el-input>
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="商品名称" prop="name">
+          <el-input v-model="addForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品进价" prop="inPice">
+          <el-input v-model="addForm.inPice"></el-input>
+        </el-form-item>
+        <el-form-item label="商品卖价" prop="salePice">
+          <el-input v-model="addForm.salePice"></el-input>
+        </el-form-item>
+        <el-form-item label="商品类型" prop="type">
+          <el-input v-model="addForm.type"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitAdd">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog :visible.sync="showDel" width="30%" :before-close="handleClose">
+      <span>确定删除此条内容</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showDel = false">取 消</el-button>
+        <el-button type="primary" @click="isDel">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      @current-change="handleCurrentChange"
+    ></el-pagination>
   </div>
 </template>
 
 <script>
-import { add, getList } from './api'
+import { add, getList, del } from './api'
 export default {
+  data() {
+    return {
+      delId: '',
+      showDel: false,
+      addForm: {
+        name: '',
+        age: 0,
+        sex: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入商品名称', trigger: 'blur' },
+          { min: 2, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur' }
+        ],
+        inPice: [
+          { required: true, message: '请输入商品进价', trigger: 'change' }
+        ],
+        salePice: [
+          { required: true, message: '请输入商品卖价', trigger: 'change' }
+        ],
+        type: [{ required: true, message: '请输入商品类型', trigger: 'change' }]
+      },
+      dialogVisible: false,
+      tableData: [],
+      pageSize: 10,
+      pageNum: 1,
+      total: 0
+    }
+  },
   mounted() {
     this.init()
   },
   methods: {
     init() {
-      getList().then(res => {
-        console.log(res, '')
+      let data = {
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
+      }
+      getList(data).then(res => {
         if (res.code === 200) {
           this.tableData = res.data
+          this.total = res.total
         }
       })
     },
@@ -51,32 +117,44 @@ export default {
       console.log(row)
     },
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+      this.dialogVisible = false
     },
-    submitAdd() {
-      add(this.addForm).then(res => {
+    isDel() {
+      del({ _id: this.delId }).then(res => {
+        console.log(res, 'res')
         if (res.code === 200) {
-          this.$message.success(res.message)
-          this.dialogVisible = false
+          this.$message.success('删除成功')
+          this.showDel = false
           this.init()
         }
       })
-    }
-  },
-
-  data() {
-    return {
-      addForm: {
-        name: '',
-        age: 0,
-        sex: ''
-      },
-      dialogVisible: false,
-      tableData: []
+    },
+    deleItem(e) {
+      this.delId = e._id
+      this.showDel = true
+    },
+    submitAdd() {
+      this.$refs['addForm'].validate(valid => {
+        if (valid) {
+          add(this.addForm).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.message)
+              this.dialogVisible = false
+              this.addForm = {}
+              this.$refs['addForm'].resetFields()
+              this.init()
+            }
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    handleCurrentChange(e) {
+      console.log(e, 'eeee')
+      console.log('handleCurrentChange')
+      this.pageNum = e
+      this.init()
     }
   }
 }

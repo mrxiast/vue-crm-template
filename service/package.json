@@ -33,7 +33,6 @@
     "sliced": "^1.0.1",
     "semver": "^5.7.1",
     "sparse-bitfield": "^3.0.3",
-    "resolve-from": "^2.0.0",
     "string_decoder": "^1.1.1",
     "util-deprecate": "^1.0.2"
   },

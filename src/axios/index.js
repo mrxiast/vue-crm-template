@@ -18,7 +18,6 @@ service.interceptors.request.use(config => {
 
 // http response 拦截器
 service.interceptors.response.use(response => {
-    console.log(response.data, 'response')
     const data = response.data;
     if (response.headers.token && response.headers.token != '' && response.headers.token != null) {
         setStore('Authorization', response.headers.token)

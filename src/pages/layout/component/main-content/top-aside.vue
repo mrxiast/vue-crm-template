@@ -53,9 +53,19 @@ export default {
       this.$store.commit('toggleNavCollapse')
     },
     loginOut() {
-      this.$store.commit('LOGIN_OUT')
-      /* 防止切换角色时addRoutes重复添加路由导致出现警告 */
+      this.$confirm('此操作将退出当前账号, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.commit('LOGIN_OUT')
+          /* 防止切换角色时addRoutes重复添加路由导致出现警告 */
       window.location.reload()
+        }).catch(() => {
+
+        });
+      
+      
     }
   }
 }
