@@ -5,7 +5,7 @@
         <div class="h1">全部产品</div>
       </el-col>
       <el-col :span="2">
-        <el-button type="primary" icon="el-icon-plus" @click="dialogVisible = true">添加</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click=" addOneShop">添加</el-button>
       </el-col>
     </el-row>
 
@@ -55,18 +55,19 @@
         <el-button type="primary" @click="isDel">确 定</el-button>
       </span>
     </el-dialog>
-
-    <el-pagination
-      background
-      layout="prev, pager, next"
-      :total="total"
-      @current-change="handleCurrentChange"
-    ></el-pagination>
+    <div style="display:flex;justify-content:flex-end;margin-top:15px;">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="total"
+        @current-change="handleCurrentChange"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import { add, getList, del } from './api'
+import { add, getList, del, changeItem } from './api'
 export default {
   data() {
     return {
@@ -94,7 +95,8 @@ export default {
       tableData: [],
       pageSize: 10,
       pageNum: 1,
-      total: 0
+      total: 0,
+      type: 1 //1是添加2是编辑
     }
   },
   mounted() {
@@ -113,8 +115,17 @@ export default {
         }
       })
     },
+    addOneShop() {
+      this.type = 1
+      this.dialogVisible = true
+      this.addForm = {}
+      this.$refs['addForm'].resetFields()
+    },
     handleClick(row) {
       console.log(row)
+      this.type = 2
+      this.addForm = JSON.parse(JSON.stringify(row))
+      this.dialogVisible = true
     },
     handleClose(done) {
       this.dialogVisible = false
@@ -136,23 +147,25 @@ export default {
     submitAdd() {
       this.$refs['addForm'].validate(valid => {
         if (valid) {
-          add(this.addForm).then(res => {
-            if (res.code === 200) {
-              this.$message.success(res.message)
-              this.dialogVisible = false
-              this.addForm = {}
-              this.$refs['addForm'].resetFields()
-              this.init()
-            }
-          })
+          if (this.type === 1) {
+            add(this.addForm).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+                this.dialogVisible = false
+                this.addForm = {}
+                this.$refs['addForm'].resetFields()
+                this.init()
+              }
+            })
+          } else {
+            changeItem(this.addForm).then(res => {})
+          }
         } else {
           return false
         }
       })
     },
     handleCurrentChange(e) {
-      console.log(e, 'eeee')
-      console.log('handleCurrentChange')
       this.pageNum = e
       this.init()
     }

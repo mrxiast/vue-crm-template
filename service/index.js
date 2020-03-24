@@ -4,7 +4,7 @@ const app = express()
 // 引入json解析中间件
 const bodyParser = require('body-parser');
 //引入了会自动执行
-require('./dbase')
+require('./connectData')
 // 允许所有的请求形式 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

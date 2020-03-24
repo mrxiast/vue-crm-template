@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import encrypt from '@/utils/encrypt'
 import { login } from './api'
 export default {
   data() {
@@ -47,11 +48,15 @@ export default {
   methods: {
     async subLogin() {
       try {
-        let params = this.subForm
+        let params = JSON.parse(JSON.stringify(this.subForm))
+        params.password = encrypt.Encrypt(params.password)
         let data = await login(params)
-        let token = data.data.token
-        this.$store.commit('LOGIN_IN', token)
-        this.$router.replace('/')
+        if (data.code === 200) {
+          let token = data.data.token
+          this.$store.commit('LOGIN_IN', token)
+          this.$message.success('登陆成功')
+          this.$router.replace('/')
+        }
       } catch (e) {
         console.log(e)
       }
@@ -61,7 +66,6 @@ export default {
         if (valid) {
           this.subLogin()
         } else {
-          this.$message.error('提交出错')
           return false
         }
       })

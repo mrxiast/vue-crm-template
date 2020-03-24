@@ -63,28 +63,6 @@ router.get('/getGoodsList', function (req, res) {
 
             })
     })
-    // Add.find({}, function (err, data) {
-    //     console.log(data)
-    //     total = JSON.parse(JSON.stringify(data)).length
-    // })
-    //     .sort({ '_id': -1 })
-    //     .skip((getData.pageNum - 1) * getData.pageSize)
-    //     .limit(getData.pageSize * 1)
-    //     .exec(function (err, data) {
-    //         if (err) {
-    //             res.send({
-    //                 "code": 500,
-    //                 "message": err
-    //             })
-    //         }
-    //         res.send({
-    //             "code": 200,
-    //             "message": '请求成功',
-    //             "data": data,
-    //             "total": total
-    //         })
-
-    //     })
 })
 
 router.post('/delItem', function (req, res) {
@@ -102,5 +80,30 @@ router.post('/delItem', function (req, res) {
             })
         }
     })
+})
+
+router.post('/changeItem', function (req, res) {
+    let query = req.body
+    Add.updateOne(
+        { '_id': query._id },
+        {
+            "name": query.name,
+            "inPice": query.inPice,
+            "salePice": query.salePice,
+            "type": query.type
+        },
+        function (err, result) {
+            if (!err) {
+                res.send({
+                    "code": 200,
+                    "message": "修改成功"
+                })
+            } else {
+                res.send({
+                    "code": 500,
+                    "message": err
+                })
+            }
+        })
 })
 module.exports = router

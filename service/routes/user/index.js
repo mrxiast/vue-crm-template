@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const UserModel = require('./userModel.js')
+const encrypt = require('../../utils/encrypt')
 
 router.post('/register', function (req, res) {
     let query = req.body
     let isOk = false
-
+    query.password = encrypt.Decrypt(query.password)
     UserModel.find((err, data) => {
         if (!err) {
             data.forEach(item => {
@@ -50,6 +51,7 @@ router.post('/register', function (req, res) {
 router.post('/login', function (req, res) {
     let query = req.body;
     let isOk = false
+    query.password = encrypt.Decrypt(query.password)
     UserModel.find((err, data) => {
         if (!err) {
             data.forEach(item => {

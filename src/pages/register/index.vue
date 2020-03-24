@@ -40,6 +40,7 @@
 
 <script>
 import { register } from './api.js'
+import encrypt from '@/utils/encrypt'
 export default {
   data() {
     return {
@@ -66,7 +67,10 @@ export default {
             return false
           }
         }
-        register(this.subForm).then(res => {
+        let data = JSON.parse(JSON.stringify(this.subForm))
+        data.password = encrypt.Encrypt(data.password)
+        console.log(data, '00123456')
+        register(data).then(res => {
           if (res.code === 200) {
             this.$message.success('注册成功')
             setTimeout(function() {
