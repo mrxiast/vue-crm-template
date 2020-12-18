@@ -22,7 +22,7 @@
     "mongoose": "^5.9.4",
     "mongoose-legacy-pluralize": "^1.0.2",
     "mpath": "^0.6.0",
-    "mquery": "^3.2.2",
+    "mquery": "^3.2.3",
     "ms": "^2.0.0",
     "process-nextick-args": "^2.0.1",
     "readable-stream": "^2.3.7",
